@@ -1,14 +1,14 @@
 output "lambda_arn" {
   description = "ARN da Lambda"
-  value       = aws_lambda_function.products_api.arn
+  value       = module.lambda.lambda_arn
 }
 
 output "dynamodb_table_name" {
   description = "Nome da tabela DynamoDB"
-  value       = aws_dynamodb_table.products.name
+  value       = module.dynamodb.table_name
 }
 
 output "api_gateway_url" {
   description = "URL da API Gateway"
-  value       = aws_apigatewayv2_api.api.api_endpoint
+  value       = module.api_gateway.api_gateway_url
 }
