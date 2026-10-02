@@ -1,6 +1,28 @@
 # AWS Serverless Products API
 
-API REST serverless desenvolvida com Terraform e AWS.
+API REST serverless desenvolvida com **Terraform** e **AWS**, utilizando Lambda, API Gateway e DynamoDB.
+
+O projeto demonstra conceitos de **Infraestrutura como Código (IaC)**, arquitetura serverless, modularização com Terraform e gerenciamento de recursos AWS.
+
+## Arquitetura
+
+```text
+Cliente
+   |
+   v
+API Gateway
+   |
+   v
+AWS Lambda
+   |
+   v
+DynamoDB
+
+Lambda
+   |
+   v
+CloudWatch
+```
 
 ## Tecnologias
 
@@ -11,69 +33,121 @@ API REST serverless desenvolvida com Terraform e AWS.
 - IAM
 - CloudWatch
 - Python 3.12
-
-## Arquitetura
-
-Cliente
-   ↓
-API Gateway
-   ↓
-AWS Lambda
-   ↓
-DynamoDB
-
-Os logs da Lambda são enviados para o CloudWatch.
+- Boto3
 
 ## Endpoints
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/products` | Criar produto |
-| GET | `/products` | Listar produtos |
-| GET | `/products/{id}` | Buscar produto |
+| Método | Endpoint         | Função          |
+|--------|------------------|-----------------|
+| POST   | `/products`      | Criar produto   |
+| GET    | `/products`      | Listar produtos |
+| GET    | `/products/{id}` | Buscar produto  |
 | DELETE | `/products/{id}` | Deletar produto |
 
-## Como executar
+## Estrutura
 
+```text
+.
+├── lambda/
+│   └── lambda_function.py
+├── layer/
+│   └── python/
+│       └── utils.py
+├── modules/
+│   ├── api-gateway/
+│   ├── dynamodb/
+│   ├── iam/
+│   └── lambda/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── providers.tf
+└── versions.tf
+```
+
+## Recursos AWS
+
+O Terraform provisiona:
+
+- API Gateway
+- AWS Lambda
+- DynamoDB
+- IAM Role e Policy
+- CloudWatch Log Group
+- Lambda Layer
+
+A infraestrutura é organizada em **módulos Terraform**, facilitando manutenção e reutilização.
+
+## Execução
+
+Inicializar o Terraform:
+
+```bash
 terraform init
-terraform fmt
+```
+
+Validar:
+
+```bash
 terraform validate
+```
+
+Visualizar o plano:
+
+```bash
 terraform plan
+```
+
+Aplicar:
+
+```bash
 terraform apply
+```
 
-## Testando a API
+Visualizar os outputs:
 
-### Criar produto
+```bash
+terraform output
+```
 
-curl -X POST "API_URL/products" \
--H "Content-Type: application/json" \
--d '{"name":"Notebook","price":3500}'
+## Teste
 
-### Listar produtos
+Após o deploy:
 
+```bash
 curl "API_URL/products"
+```
 
-### Buscar produto
+Exemplo para criar um produto:
 
-curl "API_URL/products/ID_DO_PRODUTO"
+```bash
+curl -X POST "API_URL/products" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Notebook","price":3500}'
+```
 
-### Deletar produto
+## Conceitos praticados
 
-curl -X DELETE "API_URL/products/ID_DO_PRODUTO"
+- Infrastructure as Code
+- Arquitetura Serverless
+- Terraform Modules
+- Terraform Workspaces
+- AWS Lambda
+- API Gateway
+- DynamoDB
+- IAM
+- CloudWatch
+- Lambda Layers
+- CORS
 
-## Segurança
+## Próximos passos
 
-A Lambda utiliza uma IAM Role própria.
+- API Key
+- Usage Plan
+- Autenticação com `x-api-key`
+- Melhorias de observabilidade
+- Evolução dos ambientes `dev`, `staging` e `prod`
 
-As permissões do DynamoDB são limitadas às operações necessárias:
+## Objetivo
 
-- PutItem
-- GetItem
-- Scan
-- DeleteItem
-
-Arquivos de estado do Terraform e configurações locais não são versionados no Git.
-
-## Destruir a infraestrutura
-
-terraform destroy
+Projeto desenvolvido para estudos e portfólio, com foco em **Cloud Computing, DevOps, Terraform e AWS**.
