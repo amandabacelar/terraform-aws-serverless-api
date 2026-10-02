@@ -2,6 +2,12 @@ resource "aws_apigatewayv2_api" "api" {
   name          = "${var.project_name}-${var.environment}"
   protocol_type = "HTTP"
 
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["GET", "POST", "DELETE", "OPTIONS"]
+    allow_headers = ["content-type", "x-api-key"]
+  }
+
   tags = {
     Environment = var.environment
     ManagedBy   = "terraform"

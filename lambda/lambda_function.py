@@ -3,7 +3,7 @@ import os
 import uuid
 
 import boto3
-
+from utils import layer_message
 
 dynamodb = boto3.resource("dynamodb")
 table_name = os.environ["TABLE_NAME"]
@@ -11,6 +11,7 @@ table = dynamodb.Table(table_name)
 
 
 def lambda_handler(event, context):
+    print(layer_message())
     print("Request received")
 
     method = event.get("requestContext", {}).get("http", {}).get("method")
@@ -31,7 +32,6 @@ def lambda_handler(event, context):
         return delete_product(path_parameters["id"])
 
     return response(404, {"message": "Route not found"})
-
 
 def create_product(event):
     body = json.loads(event.get("body") or "{}")
